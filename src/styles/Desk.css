@@ -1,0 +1,77 @@
+.desk-container {
+  position: relative;
+}
+
+.chair {
+  z-index: -1;
+}
+
+.desk {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 0.5px solid black;
+  z-index: 1;
+  box-shadow: 0px -4px 3px rgba(50, 50, 50, 0.15);
+}
+
+.desk:not(.booked):not(.disabled) {
+  cursor: pointer;
+}
+
+.desk.booked {
+  background-color: #51ac6d !important;
+  color: white;
+}
+
+.desk.selected {
+  background-color: lightgreen;
+  color: white;
+}
+
+.desk.special:not(.selected) {
+  color: tomato;
+}
+
+.desk.special.selected {
+  color: lemonchiffon;
+}
+
+.desk:not(.available) {
+  background-color: lightpink;
+}
+
+.desk:not(.selected):not(.booked):not(.disabled).available:hover {
+  background-color: lightgray !important;
+}
+
+.desk + .chair {
+  transition-duration: 500ms;
+}
+
+.desk:not(.selected):not(.booked):not(.disabled).available:hover + .chair {
+  transform: translateY(12px);
+}
+
+.desk.selected + .chair {
+  transform: translateY(12px);
+}
+
+.desk.booked + .chair {
+  transform: translateY(12px);
+}
+
+.desk:not(.available) + .chair {
+  transform: translateY(12px);
+}
+
+.desk-label {
+  font-size: 0.8em;
+  font-weight: lighter;
+}
+
+.desk-label:not(.booked):not(.disabled) {
+  cursor: pointer;
+}

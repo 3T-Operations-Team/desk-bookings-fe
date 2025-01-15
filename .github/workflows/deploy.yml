@@ -1,0 +1,51 @@
+name: Deploy on AWS
+
+on:
+  workflow_call:
+    inputs:
+      EB_APP:
+        required: true
+        type: string
+      EB_ENVIRONMENT:
+        required: true
+        type: string
+      IMAGE_PATH:
+        required: true
+        type: string
+        default: "ghcr.io/3t-operations-team/desk-bookings-fe:main"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Create Dockerrun.aws.json
+        run: |
+          echo "{
+            \"AWSEBDockerrunVersion\": \"1\",
+            \"Authentication\": {
+              \"Bucket\": \"${{ vars.S3_BUCKET_NAME }}\",
+              \"Key\": \"${{ vars.REGISTRY_AUTH_KEY_FILE }}\"
+             },
+             \"Image\": {
+              \"Name\": \"${{ inputs.IMAGE_PATH }}\",
+              \"Update\": \"true\"
+             },
+             \"Ports\": [{
+                \"ContainerPort\": \"8080\",
+                \"HostPort\": \"5000\"
+             }]
+          }" > Dockerrun.aws.json
+
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          aws s3 cp "./Dockerrun.aws.json" s3://elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}/artifact/${{ inputs.EB_APP }}/${{ inputs.EB_ENVIRONMENT }}/${{ github.run_id }}-fe/
+          aws elasticbeanstalk create-application-version --application-name ${{ inputs.EB_APP }} --version-label ${{ github.run_id }}-fe --description ${{ github.run_id }}-fe --source-bundle S3Bucket="elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="artifact/${{ inputs.EB_APP }}/${{ inputs.EB_ENVIRONMENT }}/${{ github.run_id }}-fe/Dockerrun.aws.json"
+          aws elasticbeanstalk update-environment --application-name ${{ inputs.EB_APP }} --environment-name ${{ inputs.EB_ENVIRONMENT }} --version-label ${{ github.run_id }}-fe
+          aws elasticbeanstalk wait environment-updated --application-name ${{ inputs.EB_APP }} --environment-name ${{ inputs.EB_ENVIRONMENT }}

@@ -1,0 +1,52 @@
+{
+  "name": "desk-bookings",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "vitest --watch=false",
+    "test-watch": "vitest",
+    "test-coverage": "vitest --coverage --watch=false"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
+    "@mui/icons-material": "^6.1.10",
+    "@mui/material": "^6.1.9",
+    "@mui/x-date-pickers": "^7.23.0",
+    "@reduxjs/toolkit": "^2.4.0",
+    "@tanstack/react-query": "^5.62.2",
+    "@tanstack/react-router": "^1.85.3",
+    "@tanstack/router-vite-plugin": "^1.85.3",
+    "axios": "^1.7.9",
+    "dayjs": "^1.11.13",
+    "npm-run-all": "^4.1.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-redux": "^9.1.2",
+    "redux": "^5.0.1",
+    "styled-components": "^6.1.13"
+  },
+  "devDependencies": {
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@eslint/js": "^9.15.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "@vitest/coverage-istanbul": "^2.1.8",
+    "eslint": "^9.15.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "globals": "^15.12.0",
+    "jsdom": "^25.0.1",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.15.0",
+    "vite": "^6.0.1",
+    "vitest": "^2.1.8"
+  }
+}
