@@ -17,8 +17,8 @@ http {
         index                   index.html;
         server_name             localhost;
 
-        location /api/ {
-            proxy_pass ${BACKEND_ADDRESS}/api/;
+        location localhost:8080/ {
+            proxy_pass ${BACKEND_ADDRESS}/;
         }
     }
 }

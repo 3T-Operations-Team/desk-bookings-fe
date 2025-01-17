@@ -41,7 +41,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { error, isError } = useDeskGroups();
 
   useEffect(() => {
-    if (isError && (error as AxiosError).status === 401) {
+    if (isError && (error as AxiosError).status === 403) {
       logout();
     }
   }, [isError]);
