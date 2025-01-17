@@ -20,5 +20,9 @@ http {
         location localhost:8080/ {
             proxy_pass ${BACKEND_ADDRESS}/;
         }
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
     }
 }
