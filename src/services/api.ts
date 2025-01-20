@@ -3,9 +3,7 @@ import { DeskGroupObject } from "../types/desks";
 import { getStoredUserEmail, getStoredUserToken } from "../auth";
 import { DeskBookingConfirmed } from "../types/bookings";
 
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080",
-});
+const axiosInstance = axios.create();
 
 axiosInstance.interceptors.request.use((config) => {
   config.headers.Authorization = getStoredUserToken();
