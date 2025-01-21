@@ -3,13 +3,14 @@
 name: Update tag
 on:
   workflow_call:
-    image_tag:
+    image-tag:
       required: true
       type: string
-      default: latest
-    new_tag:
+      default: "latest"
+    new-tag:
       required: true
       type: string
+      default: "accept"
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
