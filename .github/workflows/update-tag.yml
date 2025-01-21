@@ -28,30 +28,30 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Pull Docker Image
         run: |
-            docker pull ghcr.io/${{ env.IMAGE_NAME }}:${{ inputs.image-tag }}
+            docker pull ${{ env.IMAGE_NAME }}:${{ inputs.image-tag }}
 
       - name: Get image id
         id: image_id
         run: |
-            IMAGE_ID=$(docker inspect --format='{{.Id}}' ghcr.io/${{ env.IMAGE_NAME }}:${{ inputs.image-tag }})
+            IMAGE_ID=$(docker inspect --format='{{.Id}}' ${{ env.IMAGE_NAME }}:${{ inputs.image-tag }})
             echo "IMAGE_ID=${IMAGE_ID}" >> $GITHUB_ENV
       - name: Output Image ID
         run: echo "The Docker Image ID is $IMAGE_ID"
 
       - name: Tag latest and current tag to the image
         run: |
-            docker tag $IMAGE_ID ghcr.io/${{ env.IMAGE_NAME }}:${{ github.event.inputs.new-tag }}
+            docker tag $IMAGE_ID ${{ env.IMAGE_NAME }}:${{ github.event.inputs.new-tag }}
 
       - name: Conditionally Update Latest Tag
         if: ${{ github.event.inputs.source-tag != 'latest' }}
         run: |
-          docker tag $IMAGE_ID ghcr.io/${{ env.IMAGE_NAME }}:latest
+          docker tag $IMAGE_ID ${{ env.IMAGE_NAME }}:latest
 
       - name: Push New Tag
         run: |
-            docker push ghcr.io/${{ env.IMAGE_NAME }}:${{ github.event.inputs.new-tag }}
+            docker push ${{ env.IMAGE_NAME }}:${{ github.event.inputs.new-tag }}
 
       - name: Push Latest Tag
         if: ${{ github.event.inputs.source-tag != 'latest' }}
         run: |
-            docker push ghcr.io/${{ env.IMAGE_NAME }}:latest
+            docker push ${{ env.IMAGE_NAME }}:latest
