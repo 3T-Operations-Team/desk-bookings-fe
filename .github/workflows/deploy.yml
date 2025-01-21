@@ -12,7 +12,7 @@ on:
       IMAGE_PATH:
         required: true
         type: string
-        default: "ghcr.io/3t-operations-team/desk-bookings-fe:main"
+        default: "ghcr.io/3t-operations-team/desk-bookings-fe:latest"
 
 jobs:
   deploy:
