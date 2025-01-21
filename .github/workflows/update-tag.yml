@@ -1,0 +1,56 @@
+# this workflow gets the latest tagged image and then push the new tag. And also point it to latest if it is not.
+name: update tag
+on:
+  workflow_call:
+    image_tag:
+      required: true
+      type: string
+      default: "latest"
+    new_tag:
+      required: true
+      type: string
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Registry login
+        uses: docker/login-action@v3.3.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pull Docker Image
+        run: |
+            docker pull ghcr.io/${{ github.repository }}:${{ inputs.image-tag }}
+
+      - name: Get image id
+        id: image_id
+        run: |
+            IMAGE_ID=$(docker inspect --format='{{.Id}}' ghcr.io/${{ github.repository }}:${{ inputs.image-tag }})
+            echo "IMAGE_ID=${IMAGE_ID}" >> $GITHUB_ENV
+      - name: Output Image ID
+        run: echo "The Docker Image ID is $IMAGE_ID"
+
+      - name: Tag latest and current tag to the image
+        run: |
+            docker tag $IMAGE_ID ghcr.io/${{ github.repository }}:${{ github.event.inputs.new-tag }}
+
+      - name: Conditionally Update Latest Tag
+        if: ${{ github.event.inputs.source-tag != 'latest' }}
+        run: |
+          docker tag $IMAGE_ID ghcr.io/${{ github.repository }}:latest
+
+      - name: Push New Tag
+        run: |
+            docker push ghcr.io/${{ github.repository }}:${{ github.event.inputs.new-tag }}
+
+      - name: Push Latest Tag
+        if: ${{ github.event.inputs.source-tag != 'latest' }}
+        run: |
+            docker push ghcr.io/${{ github.repository }}:latest
