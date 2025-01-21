@@ -1,11 +1,12 @@
-# this workflow gets the latest tagged image and then push the new tag. And also point it to latest if it is not.
-name: update tag
+# this workflow gets the latest tagged image and
+# then push the new tag. And also point it to latest if it is not.
+name: Update tag
 on:
   workflow_call:
     image_tag:
       required: true
       type: string
-      default: "latest"
+      default: latest
     new_tag:
       required: true
       type: string
