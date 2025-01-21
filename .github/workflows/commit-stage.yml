@@ -26,11 +26,11 @@ jobs:
       - name: Unit Tests
         run: npm test -t unit
 
-      - name: Component Tests
-        run: npm test -t component
-
       - name: Integration Tests
         run: npm test -t integration
+
+      - name: Component Tests
+        run: npm test -t component
 
       - name: Contract Verification Tests
         run: npm test -t contract
