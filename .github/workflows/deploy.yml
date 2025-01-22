@@ -18,6 +18,25 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Check if docker image exists
+        env:
+          IMAGE_PATH: ${{ inputs.IMAGE_PATH }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          IMAGE=${IMAGE_PATH%:*}
+          TAG=${IMAGE_PATH##*:}
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+          -H "Authorization: Bearer $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "https://ghcr.io/v2/${IMAGE}/manifests/${TAG}")
+          
+          if [ "$RESPONSE" -eq 200 ]; then
+              echo "Docker image $IMAGE_PATH exists on GHCR."
+          else
+              echo "Docker image $IMAGE_PATH does not exist on GHCR."
+              exit 1
+          fi
+
       - name: Set up AWS CLI
         uses: aws-actions/configure-aws-credentials@v4
         with:
