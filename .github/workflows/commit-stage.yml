@@ -1,4 +1,4 @@
-name: Commit Frontend Pipeline
+name: Commit Stage (Frontend)
 
 on:
   push:
